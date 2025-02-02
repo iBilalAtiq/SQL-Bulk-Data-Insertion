@@ -2,17 +2,16 @@ import psycopg2
 from faker import Faker
 import random
 
-# Initialize Faker
 fake = Faker()
 
-# Database connection details (Replace with actual credentials)
+# Database connection
 DB_NAME = "Retail_Store"
 DB_USER = "postgres"
 DB_PASSWORD = "12345"
 DB_HOST = "localhost"
 DB_PORT = "5432"
 
-# Connect to the PostgreSQL database
+# Connection with PostgreSQL DB
 def connect_to_db():
     try:
         conn = psycopg2.connect(
@@ -84,10 +83,10 @@ def insert_orders(conn, num_orders=5000):
     customer_ids = [row[0] for row in cur.fetchall()]
     cur.close()
 
-        orders = [(fake.date(), round(random.uniform(100, 2000), 2), random.choice([True, False]), random.choice(customer_ids)) for _ in range(num_orders)]
-        query = "INSERT INTO orders (order_date, order_total_amount, order_status, order_cust_id) VALUES (%s, %s, %s, %s)"
-        bulk_insert(conn, query, orders)
-        print(f"{num_orders} orders inserted successfully.")
+    orders = [(fake.date(), round(random.uniform(100, 2000), 2), random.choice([True, False]), random.choice(customer_ids)) for _ in range(num_orders)]
+    bulk_insert(conn, query, orders)
+    print(f"{num_orders} orders inserted successfully.")
+    query = "INSERT INTO orders (order_date, order_total_amount, order_status, order_cust_id) VALUES (%s, %s, %s, %s)"
 
 # Insert order items
 def insert_order_items(conn, num_order_items=5000):
@@ -111,7 +110,7 @@ def insert_reviews(conn, num_reviews=5000):
     bulk_insert(conn, query, reviews)
     print(f"{num_reviews} reviews inserted successfully.")
 
-# Main function
+# Run main function
 def main():
     conn = connect_to_db()
     try:
